@@ -19,7 +19,7 @@ find_exe_in_plugin <- function(plugin) {
 }
 
 default_plugin_dir <- function() {
-  exe <- tryCatch(get_aquacrop_path(), error = function(e) "")
+  exe <- tryCatch(get_aquacrop_plugin_path(), error = function(e) "")
   if (nzchar(exe) && file.exists(exe))
     return(dirname(normalizePath(exe, winslash = "/", mustWork = FALSE)))
   fallback <- "C:/JHI/Projects/Daisy/R-DAISY_v2/AquaCrop73_windows"
@@ -31,7 +31,7 @@ default_plugin_dir <- function() {
 default_aquacrop_exe <- function() {
   hit <- find_exe_in_plugin(default_plugin_dir())
   if (nzchar(hit)) return(hit)
-  tryCatch(get_aquacrop_path(), error = function(e) "")
+  tryCatch(get_aquacrop_plugin_path(), error = function(e) "")
 }
 
 plugin_dir_of <- function(project) {
@@ -571,7 +571,7 @@ objective_fit_series <- function(spec, project) {
         ggplot2::geom_point(data = obs_rows, size = 2.2, na.rm = TRUE) +
         ggplot2::scale_colour_manual(values = c(Observed = "#c0392b", Simulated = "#1b5e40")) +
         ggplot2::labs(title = key, x = xcol, y = lab, colour = NULL) +
-        ggplot2::theme_minimal(base_size = 13) +
+        ggplot2::theme_bw(base_size = 13) +
         ggplot2::theme(legend.position = "bottom")
     }
   }
@@ -622,10 +622,6 @@ run_project_aquacrop <- function(project, values = NULL, show_log = TRUE) {
     )
   }
   write_list_projects(project)
-  sd <- simul_dir_of(project)
-  if (nzchar(sd) && dir.exists(sd)) {
-    tryCatch(set_simul_dir(sd), error = function(e) NULL)
-  }
   status <- run_aquacrop(
     working_dir = plugin,
     aquacrop_exe = aquacrop_exe_of(project),
@@ -982,7 +978,7 @@ plot_series <- function(dt, y_cols, x_col = "Date", geom = "line",
   }
   p +
     ggplot2::labs(title = title, x = x_col, y = NULL, colour = NULL, fill = NULL) +
-    ggplot2::theme_minimal(base_size = 13) +
+    ggplot2::theme_bw(base_size = 13) +
     ggplot2::theme(legend.position = "bottom")
 }
 
